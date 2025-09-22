@@ -1,0 +1,53 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
+  "port": 4321,
+  "https": true,
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://itaipudigital.sharepoint.com/sites/SNO365-DEV/_layouts/15/SPListForm.aspx",
+      "formCustomizer": {
+        "componentId": "66d0d6df-5587-4306-8ad9-2fae7b51f0f8",
+        "PageType": 8,
+        "RootFolder": "/sites/SNO365-DEV/OPSEDT",
+        "properties": {
+          "sampleText": "Value"
+        }
+      }
+    },
+    "opsedt_NewForm": {
+      "pageUrl": "https://itaipudigital.sharepoint.com/sites/SNO365-DEV/_layouts/15/SPListForm.aspx",
+      "formCustomizer": {
+        "componentId": "66d0d6df-5587-4306-8ad9-2fae7b51f0f8",
+        "PageType": 8,
+        "RootFolder": "/sites/SNO365-DEV/OPSEDT",
+        "properties": {
+          "sampleText": "Value"
+        }
+      }
+    },
+    "opsedt_EditForm": {
+      "pageUrl": "https://itaipudigital.sharepoint.com/sites/SNO365-DEV/_layouts/15/SPListForm.aspx",
+      "formCustomizer": {
+        "componentId": "66d0d6df-5587-4306-8ad9-2fae7b51f0f8",
+        "PageType": 6,
+        "RootFolder": "/sites/SNO365-DEV/OPSEDT",
+        "ID": 428,
+        "properties": {
+          "sampleText": "Value"
+        }
+      }
+    },
+    "opsedt_ViewForm": {
+      "pageUrl": "https://itaipudigital.sharepoint.com/sites/SNO365-DEV/_layouts/15/SPListForm.aspx",
+      "formCustomizer": {
+        "componentId": "66d0d6df-5587-4306-8ad9-2fae7b51f0f8",
+        "PageType": 4,
+        "RootFolder": "/sites/SNO365-DEV/OPSEDT",
+        "ID": 428,
+        "properties": {
+          "sampleText": "Value"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "opsedt-form-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/opsedt/OpsedtFormCustomizer.js",
+          "manifest": "./src/extensions/opsedt/OpsedtFormCustomizer.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "OpsedtFormCustomizerStrings": "lib/extensions/opsedt/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
+  }
+}

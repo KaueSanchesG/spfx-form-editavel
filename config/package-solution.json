@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "spfx-form-editavel-client-side-solution",
+    "id": "dc014048-9762-49ed-92e5-ae20d61c2597",
+    "version": "1.1.5.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.20.0"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "spfx-form-editavel description"
+      },
+      "longDescription": {
+        "default": "spfx-form-editavel description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "spfx-form-editavel Feature",
+        "description": "The feature that activates elements of the spfx-form-editavel solution.",
+        "id": "c8b2be2d-bd13-4910-a3b9-5faa24556071",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/spfx-form-editavel.sppkg"
+  }
+}
