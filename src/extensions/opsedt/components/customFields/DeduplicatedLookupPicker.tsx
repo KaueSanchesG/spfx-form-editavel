@@ -39,7 +39,7 @@ export const DeduplicatedLookupPicker: React.FC<IDeduplicatedLookupPickerProps> 
             try {
                 const items: any[] = await sp.web.lists.getById(listGuid).items();
 
-                const filesOnly = items.filter(item => item.FileSystemObjectType === 0);
+                const filesOnly = items.filter(item => item.FileSystemObjectType === 0 && item.tramitacao !== "NR4");
 
                 const uniqueMap = new Map<string, any>();
                 for (const item of filesOnly) {

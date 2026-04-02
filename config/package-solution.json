@@ -3,7 +3,7 @@
   "solution": {
     "name": "spfx-form-editavel-client-side-solution",
     "id": "dc014048-9762-49ed-92e5-ae20d61c2597",
-    "version": "1.1.5.0",
+    "version": "1.2.0.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

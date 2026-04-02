@@ -19,6 +19,13 @@ import { FilteredMultiLookupPicker, IFilteredMultiLookupPickerRef } from './cust
 import { CustomLookupEditor } from './customFields/CustomLookupEditor';
 import { DeduplicatedLookupPicker } from './customFields/DeduplicatedLookupPicker';
 import { IDynamicFieldProps, DynamicField } from '@pnp/spfx-controls-react/lib/controls/dynamicForm/dynamicField';
+import {
+  DateTimePicker,
+  DateConvention,
+  TimeConvention,
+  IDateTimePickerStrings,
+  TimeDisplayControlType
+} from '@pnp/spfx-controls-react/lib/DateTimePicker';
 
 export interface IOpsedtProps {
   context: FormCustomizerContext;
@@ -32,6 +39,7 @@ export interface IOpsedtState {
   canEdit: boolean;
   isSaving?: boolean;
   areaGestoraValue?: string;
+  isLocked?: boolean;
 }
 
 export default class Opsedt extends React.Component<IOpsedtProps, IOpsedtState> {
@@ -71,6 +79,20 @@ export default class Opsedt extends React.Component<IOpsedtProps, IOpsedtState> 
 
       } catch (error) {
         console.error("Erro ao verificar permissões no item:", error);
+      }
+    }
+
+    if (this.props.context.itemId) {
+      try {
+        const list = this.sp.web.lists.getById(this.props.context.list.guid.toString());
+        const itemData = await list.items.getById(this.props.context.itemId).select("EstadoNormativoId")();
+
+        if (itemData.EstadoNormativoId === 4) {
+          // Voltar nesse ponto
+          this.setState({ isLocked: true, canEdit: false });
+        }
+      } catch (error) {
+        console.error("Erro ao verificar EstadoNormativo:", error);
       }
     }
   }
@@ -150,7 +172,7 @@ export default class Opsedt extends React.Component<IOpsedtProps, IOpsedtState> 
   private _onRenderNavigationContent = (props: IPanelProps, defaultRender?: (props?: IPanelProps) => JSX.Element | null): JSX.Element | null => {
     return (
       <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-        {this.props.displayMode === FormDisplayMode.Display && this.state.canEdit && !this.state.isEditMode && (
+        {this.props.displayMode === FormDisplayMode.Display && this.state.canEdit && !this.state.isEditMode && !this.state.isLocked && (
           <IconButton
             iconProps={{ iconName: 'Edit' }}
             title="Editar"
@@ -172,8 +194,34 @@ export default class Opsedt extends React.Component<IOpsedtProps, IOpsedtState> 
     const modeText = currentDisplayMode === FormDisplayMode.New ? formTitleResources.new[lang] : currentDisplayMode === FormDisplayMode.Edit ? formTitleResources.edit[lang] : formTitleResources.view[lang];
 
     const fieldsToOrder: string[] = ["Identificador", "TituloPT", "TituloES1", "Area_x0020_Gestora", "siglaDoTipoDoNormativo", "aplicacaoNormativo", "DataInicioVigencia0", "DataFimVigencia", "normativo_x002d_complementar", "normativoEmAnexo_historico", "ArquivosRelacionados", "NormativosCancelados", "historicocancelado", "Revisor", "Gestor", "MotivoRevisao", "Parecer", "comentario"];
-    const fieldsToHide: string[] = ["FileLeafRef", "Numeral", "Correcao", "AreaGestoraTexto", "tramitacao", "DocumentosEmTramitacao", "HistoricoNormativo", "Revisao", "IdiomaNormativo", "IdiomaVersao", "NotasDaRevisao", "motivoCancelamento", "EstadoNormativo", "DescricaoTipoDocumento", "corretores"];
+    const fieldsToHide: string[] = ["FileLeafRef", "Numeral", "Correcao", "AreaGestoraTexto", "tramitacao", "DocumentosEmTramitacao", "HistoricoNormativo", "Revisao", "IdiomaNormativo", "IdiomaVersao", "NotasDaRevisao", "motivoCancelamento", "EstadoNormativo", "DescricaoTipoDocumento", "corretores", "Abrangencia0"];
     const fieldsToDisable: string[] = ["FileLeafRef", "Numeral", "Identificador", "Area_x0020_Gestora", "siglaDoTipoDoNormativo", "comentario", "normativoEmAnexo_historico", "Revisao", "comentario", "historicocancelado", "Parecer"];
+
+    const calendarStringsPT: IDateTimePickerStrings = {
+      months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+      days: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'],
+      shortDays: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+      goToToday: 'Ir para hoje',
+      dateLabel: 'Data',
+      timeLabel: 'Hora',
+      timeSeparator: ':',
+      textErrorMessage: 'Por favor, insira uma data válida'
+    };
+
+    const calendarStringsES: IDateTimePickerStrings = {
+      months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+      days: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      shortDays: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+      goToToday: 'Ir a hoy',
+      dateLabel: 'Fecha',
+      timeLabel: 'Hora',
+      timeSeparator: ':',
+      textErrorMessage: 'Por favor, introduzca una fecha válida'
+    };
+
+    const dateTimeStrings = lang === 'ES' ? calendarStringsES : calendarStringsPT;
 
     const fieldOverrides = {
       Area_x0020_Gestora: (fieldProps: IDynamicFieldProps) => {
@@ -235,7 +283,52 @@ export default class Opsedt extends React.Component<IOpsedtProps, IOpsedtState> 
             onSelectionChange={this.handleNormativoComplementarChange}
           />
         );
-      }
+      },
+
+      DataFimVigencia: (fieldProps: IDynamicFieldProps) => (
+        <DateTimePicker
+          label={fieldProps.label}
+          dateConvention={DateConvention.DateTime}
+          timeConvention={TimeConvention.Hours24}
+          showLabels={false}
+          timeDisplayControlType={TimeDisplayControlType.Dropdown}
+          showClearDate={true}
+          value={fieldProps.newValue || fieldProps.value}
+          formatDate={(date) =>
+            `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+          }
+          strings={dateTimeStrings}
+          onChange={(date: Date | undefined) => {
+            if (fieldProps?.onChanged) {
+              fieldProps.onChanged(fieldProps.columnInternalName, date, true);
+            }
+          }}
+          disabled={fieldProps.disabled}
+        />
+      ),
+
+      DataInicioVigencia0: (fieldProps: IDynamicFieldProps) => (
+        <DateTimePicker
+          label={fieldProps.label}
+          dateConvention={DateConvention.DateTime}
+          timeConvention={TimeConvention.Hours24}
+          showLabels={false}
+          timeDisplayControlType={TimeDisplayControlType.Dropdown}
+          showClearDate={true}
+          value={fieldProps.newValue || fieldProps.value}
+          formatDate={(date) =>
+            `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+          }
+          strings={dateTimeStrings}
+          onChange={(date: Date | undefined) => {
+            if (fieldProps?.onChanged) {
+              fieldProps.onChanged(fieldProps.columnInternalName, date, true);
+            }
+          }}
+          disabled={fieldProps.disabled}
+        />
+      ),
+
     };
 
     return (
@@ -266,7 +359,7 @@ export default class Opsedt extends React.Component<IOpsedtProps, IOpsedtState> 
             fieldOrder={fieldsToOrder}
             hiddenFields={fieldsToHide}
             disabledFields={fieldsToDisable}
-            disabled={!this.state.isEditMode || this.state.isSaving}
+            disabled={!this.state.isEditMode || this.state.isSaving || this.state.isLocked}
           />
         </div>
       </Panel>
